@@ -1,4 +1,4 @@
-﻿# Agent Jola Product Platform Design
+# Agent Jola Product Platform Design
 
 本文档把当前讨论收束为一个统一设计：Agent Jola 既是可开源安装的本地 Agent 对战项目，也是由官方站点提供账号、形象、API key、配额和安装指令的产品平台。
 
@@ -376,7 +376,7 @@ pnpm install
 
 pnpm agent:setting write --yes `
   --base-url http://127.0.0.1:3001 `
-  --cloud-url https://agentjola.tech `
+  --cloud-url https://agentjola.art `
   --api-key ap_issued_xxx `
   --provider mock
 
@@ -389,7 +389,7 @@ OpenAI：
 
 ```powershell
 pnpm agent:setting write --yes `
-  --cloud-url https://agentjola.tech `
+  --cloud-url https://agentjola.art `
   --api-key ap_issued_xxx `
   --provider openai `
   --model gpt-4.1 `
@@ -403,7 +403,7 @@ Anthropic：
 
 ```powershell
 pnpm agent:setting write --yes `
-  --cloud-url https://agentjola.tech `
+  --cloud-url https://agentjola.art `
   --api-key ap_issued_xxx `
   --provider anthropic `
   --model claude-sonnet-4-20250514 `

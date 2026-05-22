@@ -1,4 +1,4 @@
-﻿# Agent Jola Developer Preview Install Guide
+# Agent Jola Developer Preview Install Guide
 
 This is the non-engineer install path we expect the website to show after a user creates an API key.
 
@@ -26,7 +26,7 @@ The raw API key is shown only once. If it is lost, revoke it and create a new on
 git clone https://github.com/agentjola/agent-jola.git
 cd agent-jola
 pnpm install
-pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.tech --api-key <api-key> --provider mock
+pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.art --api-key <api-key> --provider mock
 pnpm agent:setting sync
 pnpm agent:setting check
 pnpm dev
@@ -46,7 +46,7 @@ The root page opens the Portal flow. The local battle workspace remains availabl
 git clone https://github.com/agentjola/agent-jola.git
 cd agent-jola
 pnpm install
-pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.tech --api-key '<api-key>' --provider mock
+pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.art --api-key '<api-key>' --provider mock
 pnpm agent:setting sync
 pnpm agent:setting check
 pnpm dev
@@ -103,8 +103,8 @@ Expected diagnostics include Node, pnpm, local server URL, cloud URL, Product AP
 
 `pnpm smoke:install` copies the project to a temporary clean directory, excludes local `.env` and runtime data, installs dependencies, builds, starts a release server, creates a Portal profile and Product API key, runs `agent:setting write/sync/check`, and creates a room through the issued key. This is the closest automated check to a first-time user install.
 
-Production setup for `agentjola.tech` should be based on `.env.production.example`, with Google OAuth redirect URI:
+Production setup for `agentjola.art` should be based on `.env.production.example`, with Google OAuth redirect URI:
 
 ```txt
-https://agentjola.tech/api/auth/google/callback
+https://agentjola.art/api/auth/google/callback
 ```

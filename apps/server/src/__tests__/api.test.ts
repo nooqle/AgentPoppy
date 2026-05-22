@@ -753,7 +753,7 @@ describe("server API", () => {
     }
   });
 
-  it("builds production Google OAuth redirects and secure cookies for agentjola.tech", async () => {
+  it("builds production Google OAuth redirects and secure cookies for agentjola.art", async () => {
     const previousNodeEnv = process.env.NODE_ENV;
     const previousClientId = process.env.AGENT_JOLA_GOOGLE_CLIENT_ID;
     const previousClientSecret = process.env.AGENT_JOLA_GOOGLE_CLIENT_SECRET;
@@ -763,8 +763,8 @@ describe("server API", () => {
     process.env.NODE_ENV = "production";
     process.env.AGENT_JOLA_GOOGLE_CLIENT_ID = "google-client-id";
     process.env.AGENT_JOLA_GOOGLE_CLIENT_SECRET = "google-client-secret";
-    process.env.AGENT_JOLA_GOOGLE_REDIRECT_URI = "https://agentjola.tech/api/auth/google/callback";
-    process.env.AGENT_JOLA_PUBLIC_API_BASE_URL = "https://agentjola.tech";
+    process.env.AGENT_JOLA_GOOGLE_REDIRECT_URI = "https://agentjola.art/api/auth/google/callback";
+    process.env.AGENT_JOLA_PUBLIC_API_BASE_URL = "https://agentjola.art";
     process.env.AGENT_JOLA_ENABLE_DEV_PORTAL_LOGIN = "true";
     const runtime = new MatchRuntimeManager(storage, 1000);
     const app = await buildApp({ storage, runtime });
@@ -778,7 +778,7 @@ describe("server API", () => {
       const location = String(googleStart.headers.location);
       expect(location).toContain("https://accounts.google.com/o/oauth2/v2/auth");
       expect(location).toContain(
-        encodeURIComponent("https://agentjola.tech/api/auth/google/callback")
+        encodeURIComponent("https://agentjola.art/api/auth/google/callback")
       );
       expect(location).toContain("state=st_");
 

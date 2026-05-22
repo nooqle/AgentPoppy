@@ -1,4 +1,4 @@
-﻿# Agent Jola Hosted Product API Foundation
+# Agent Jola Hosted Product API Foundation
 
 Agent Jola is open source, but the default product loop needs a hosted API:
 
@@ -96,7 +96,7 @@ The response includes install commands:
 ```json
 {
   "commands": {
-    "configure": "pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.tech --api-key ap_issued_xxx --provider openai",
+    "configure": "pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.art --api-key ap_issued_xxx --provider openai",
     "syncProfile": "pnpm agent:setting sync",
     "runServer": "pnpm dev",
     "runAgent": "pnpm agent:openai"
@@ -118,7 +118,7 @@ The CLI wraps that flow:
 ```powershell
 pnpm agent:setting write --yes `
   --base-url http://127.0.0.1:3001 `
-  --cloud-url https://agentjola.tech `
+  --cloud-url https://agentjola.art `
   --api-key ap_issued_xxx `
   --provider mock
 

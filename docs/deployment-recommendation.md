@@ -26,8 +26,8 @@ Use a small Compute Engine VM:
 - Docker Compose from this repo.
 - Persistent disk for `data/`.
 - Nginx or Caddy in front for HTTPS.
-- `agentjola.tech` points to the VM.
-- Google OAuth callback: `https://agentjola.tech/api/auth/google/callback`.
+- `agentjola.art` points to the VM.
+- Google OAuth callback: `https://agentjola.art/api/auth/google/callback`.
 - Nightly backup of `data/agent-bomber.sqlite`, `data/replays`, and `data/decisions`.
 
 This matches the current application design and keeps server cost and engineering complexity low.

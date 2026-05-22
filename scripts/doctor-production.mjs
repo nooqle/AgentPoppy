@@ -23,7 +23,7 @@ const redirectUri = env("AGENT_JOLA_GOOGLE_REDIRECT_URI");
 const corsOrigins = env("AGENT_JOLA_CORS_ORIGINS");
 const issuerSecret = env("AGENT_JOLA_KEY_ISSUER_SECRET");
 
-check("AGENT_JOLA_PUBLIC_API_BASE_URL", isHttpsAgentJolaUrl(publicBaseUrl), "Use https://agentjola.tech");
+check("AGENT_JOLA_PUBLIC_API_BASE_URL", isHttpsAgentJolaUrl(publicBaseUrl), "Use https://agentjola.art");
 check("AGENT_JOLA_GOOGLE_CLIENT_ID", Boolean(env("AGENT_JOLA_GOOGLE_CLIENT_ID")));
 check("AGENT_JOLA_GOOGLE_CLIENT_SECRET", Boolean(env("AGENT_JOLA_GOOGLE_CLIENT_SECRET")));
 check(
@@ -41,8 +41,8 @@ check(
   corsOrigins
     .split(",")
     .map((origin) => origin.trim())
-    .includes("https://agentjola.tech"),
-  "Must include https://agentjola.tech."
+    .includes("https://agentjola.art"),
+  "Must include https://agentjola.art."
 );
 check(
   "dev-login disabled",
@@ -69,7 +69,7 @@ if (failed.length > 0) {
   console.log(`Production doctor found ${failed.length} blocking issue(s).`);
   process.exitCode = 1;
 } else {
-  console.log("Agent Jola production configuration is ready for an agentjola.tech smoke test.");
+  console.log("Agent Jola production configuration is ready for an agentjola.art smoke test.");
 }
 
 function env(name) {
@@ -81,7 +81,7 @@ function isHttpsAgentJolaUrl(value) {
     const url = new URL(value);
     return (
       url.protocol === "https:" &&
-      (url.hostname === "agentjola.tech" || url.hostname === "www.agentjola.tech")
+      (url.hostname === "agentjola.art" || url.hostname === "www.agentjola.art")
     );
   } catch {
     return false;

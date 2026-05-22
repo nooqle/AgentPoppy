@@ -1,4 +1,4 @@
-﻿import { existsSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
@@ -273,7 +273,7 @@ function printUsage(): void {
   pnpm agent:setting check
   pnpm agent:setting sync
   pnpm agent:setting init
-  pnpm agent:setting write --yes --cloud-url https://agentjola.tech --api-key <key> --provider mock --agent Ember
+  pnpm agent:setting write --yes --cloud-url https://agentjola.art --api-key <key> --provider mock --agent Ember
   pnpm agent:setting write --yes --provider openai --openai-key <key> --model gpt-4.1
 `);
 }

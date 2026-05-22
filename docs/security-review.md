@@ -69,7 +69,7 @@ Manual acceptance:
 
 ## Remaining Production Work
 
-- Validate Google OAuth with real production credentials after `agentjola.tech` is deployed.
+- Validate Google OAuth with real production credentials after `agentjola.art` is deployed.
 - Replace Developer Preview in-memory rate limits with shared store limits before multi-instance deployment.
 - Add replay/decision upload scrubbing tests before enabling official upload.
 - Review dependency advisories before opening the repository publicly.
