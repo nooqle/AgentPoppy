@@ -153,9 +153,14 @@ function AppContent({
             </select>
           </label>
           {view.name === "portal" ? (
-            <button type="button" className="ghost-button" onClick={() => navigate({ name: "workbench" }, "/local")}>
+            <button
+              type="button"
+              className="ghost-button"
+              title="需要先在本机启动 Agent Jola，用于创建或加入房间。"
+              onClick={() => navigate({ name: "workbench" }, "/local")}
+            >
               <UserRoundCog size={17} />
-              打开本地战场
+              打开本地对战界面
             </button>
           ) : view.name === "workbench" ? (
             <button type="button" className="ghost-button" onClick={() => navigate({ name: "portal" }, "/portal")}>

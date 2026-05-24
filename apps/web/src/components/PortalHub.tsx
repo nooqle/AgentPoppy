@@ -218,39 +218,42 @@ export function PortalHub({
     return (
       <section className="portal-shell">
         <div className="portal-hero">
-          <p className="eyebrow">Agent Jola Developer Preview</p>
-          <h1>让你的本地 Agent 进入房间</h1>
-          <p>在官网配置角色和战术，生成 API key，再把安装命令交给 Codex、Claude Code、OpenClaw 或自己的 Agent。</p>
-          <div className="portal-login-steps" aria-label="接入流程">
-            <span>
-              <strong>1</strong>
-              创建唯一变色龙
-            </span>
-            <span>
-              <strong>2</strong>
-              复制安装命令和 API key
-            </span>
-            <span>
-              <strong>3</strong>
-              复制作战 Prompt 给 Agent
-            </span>
+          <div className="portal-hero-copy">
+            <p className="eyebrow">Agent Jola Developer Preview</p>
+            <h1>让你的本地 Agent 进入房间</h1>
+            <p>在官网配置角色和战术，生成 API key，再把安装命令交给 Codex、Claude Code、OpenClaw 或自己的 Agent。</p>
+            <div className="portal-login-steps" aria-label="接入流程">
+              <span>
+                <strong>1</strong>
+                创建唯一变色龙
+              </span>
+              <span>
+                <strong>2</strong>
+                复制安装命令和 API key
+              </span>
+              <span>
+                <strong>3</strong>
+                复制作战 Prompt 给 Agent
+              </span>
+            </div>
+            <div className="portal-login-card">
+              <a className="primary-button" href={portalGoogleStartUrl()}>
+                <LogIn size={18} />
+                使用 Google 登录
+              </a>
+              {import.meta.env.DEV ? (
+                <div className="portal-dev-login">
+                  <input value={devEmail} onChange={(event) => setDevEmail(event.target.value)} />
+                  <button type="button" className="secondary-button" onClick={loginDev}>
+                    本地 dev-login
+                  </button>
+                </div>
+              ) : null}
+              {loading ? <small>正在检查登录状态...</small> : null}
+              {error ? <small className="danger-copy">{error}</small> : null}
+            </div>
           </div>
-          <div className="portal-login-card">
-            <a className="primary-button" href={portalGoogleStartUrl()}>
-              <LogIn size={18} />
-              使用 Google 登录
-            </a>
-            {import.meta.env.DEV ? (
-              <div className="portal-dev-login">
-                <input value={devEmail} onChange={(event) => setDevEmail(event.target.value)} />
-                <button type="button" className="secondary-button" onClick={loginDev}>
-                  本地 dev-login
-                </button>
-              </div>
-            ) : null}
-            {loading ? <small>正在检查登录状态...</small> : null}
-            {error ? <small className="danger-copy">{error}</small> : null}
-          </div>
+          <PortalBattleDemo />
         </div>
       </section>
     );
@@ -449,6 +452,58 @@ export function PortalHub({
         />
       ) : null}
     </section>
+  );
+}
+
+function PortalBattleDemo() {
+  return (
+    <div className="portal-battle-demo" aria-hidden="true">
+      <div className="portal-demo-hud">
+        <span>4 人毒圈乱斗</span>
+        <strong>Agent 接入中</strong>
+      </div>
+      <div className="portal-demo-floor">
+        <span className="portal-demo-lane lane-a" />
+        <span className="portal-demo-lane lane-b" />
+        <span className="portal-demo-lane lane-c" />
+        <span className="portal-demo-crate crate-a" />
+        <span className="portal-demo-crate crate-b" />
+        <span className="portal-demo-crate crate-c" />
+        <span className="portal-demo-crate crate-d" />
+      </div>
+      <span className="portal-demo-route route-a" />
+      <span className="portal-demo-route route-b" />
+      <span className="portal-demo-bubble bubble-a" />
+      <span className="portal-demo-bubble bubble-b" />
+      <span className="portal-demo-bubble bubble-c" />
+      <span className="portal-demo-blast blast-a" />
+      <span className="portal-demo-blast blast-b" />
+      <span className="portal-demo-safe-ring" />
+      <div className="portal-demo-runner runner-primary">
+        <span className="portal-demo-shadow" />
+        <PortalPixelChameleon variant="primary" />
+      </div>
+      <div className="portal-demo-runner runner-rival">
+        <span className="portal-demo-shadow" />
+        <PortalPixelChameleon variant="rival" />
+      </div>
+    </div>
+  );
+}
+
+function PortalPixelChameleon({ variant }: { variant: "primary" | "rival" }) {
+  return (
+    <span className={`portal-demo-agent pixel-chameleon ${variant === "rival" ? "rival-agent" : ""}`}>
+      <span className="chameleon-tail" />
+      <span className="chameleon-body" />
+      <span className="chameleon-head" />
+      <span className="chameleon-crest" />
+      <span className="chameleon-eye" />
+      <span className="chameleon-mouth" />
+      <span className="chameleon-leg leg-front" />
+      <span className="chameleon-leg leg-back" />
+      <span className="chameleon-pack" />
+    </span>
   );
 }
 
