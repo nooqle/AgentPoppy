@@ -3284,6 +3284,354 @@ small {
   transform: rotate(-7deg);
 }
 
+.portal-battle-demo {
+  isolation: isolate;
+  min-height: clamp(420px, 45vw, 590px);
+  border: 1px solid rgba(246, 196, 83, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(246, 196, 83, 0.18), transparent 24%),
+    radial-gradient(circle at 78% 74%, rgba(91, 214, 160, 0.18), transparent 24%),
+    linear-gradient(135deg, rgba(20, 32, 27, 0.98), rgba(5, 9, 8, 0.98));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 244, 207, 0.06),
+    inset 0 -120px 120px rgba(0, 0, 0, 0.3),
+    0 28px 70px rgba(0, 0, 0, 0.34);
+  image-rendering: auto;
+}
+
+.portal-battle-demo::before,
+.portal-battle-demo::after {
+  display: none;
+}
+
+.portal-demo-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(246, 196, 83, 0.035) 1px, transparent 1px) 0 0 / 42px 42px,
+    linear-gradient(0deg, rgba(246, 196, 83, 0.025) 1px, transparent 1px) 0 0 / 42px 42px;
+}
+
+.portal-demo-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 10%;
+  border: 1px solid rgba(246, 196, 83, 0.16);
+  opacity: 0.75;
+}
+
+.portal-demo-glow {
+  position: absolute;
+  width: 42%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  filter: blur(44px);
+  opacity: 0.5;
+  transform: translateZ(0);
+}
+
+.glow-a {
+  top: 8%;
+  right: 6%;
+  background: rgba(246, 196, 83, 0.22);
+}
+
+.glow-b {
+  bottom: 8%;
+  left: 8%;
+  background: rgba(91, 214, 160, 0.16);
+}
+
+.portal-demo-stage {
+  position: absolute;
+  inset: clamp(22px, 3vw, 38px);
+  border: 1px solid rgba(246, 196, 83, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 244, 207, 0.05), transparent 26%),
+    rgba(7, 13, 11, 0.28);
+  overflow: hidden;
+}
+
+.portal-demo-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 0 35%, rgba(255, 244, 207, 0.08) 44%, transparent 55% 100%);
+  opacity: 0.56;
+  transform: translateX(-72%);
+  animation: portalScannerSweep 7.5s var(--ease-out-quart) infinite;
+}
+
+.portal-demo-hud {
+  top: 20px;
+  left: 20px;
+  z-index: 8;
+  gap: 12px;
+  border: 1px solid rgba(246, 196, 83, 0.32);
+  background: rgba(9, 13, 10, 0.86);
+  padding: 10px 14px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.26);
+}
+
+.portal-demo-hud span {
+  color: #f6c453;
+  font-size: 0.68rem;
+}
+
+.portal-demo-hud strong {
+  color: #fff4cf;
+  font-size: 0.82rem;
+}
+
+.portal-demo-map {
+  position: absolute;
+  left: 7%;
+  right: 11%;
+  bottom: 10%;
+  height: 58%;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid rgba(246, 196, 83, 0.22);
+  background:
+    linear-gradient(90deg, rgba(91, 214, 160, 0.1), transparent 26% 72%, rgba(246, 196, 83, 0.08)),
+    linear-gradient(180deg, rgba(18, 61, 48, 0.84), rgba(6, 18, 15, 0.96));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 244, 207, 0.04),
+    0 28px 0 rgba(0, 0, 0, 0.26),
+    0 42px 70px rgba(0, 0, 0, 0.38);
+  transform: perspective(860px) rotateX(58deg) rotateZ(-7deg);
+  transform-origin: 50% 72%;
+}
+
+.portal-demo-tile {
+  min-width: 0;
+  aspect-ratio: 1;
+  border: 1px solid rgba(91, 214, 160, 0.11);
+  background:
+    linear-gradient(135deg, rgba(255, 244, 207, 0.035), transparent 44%),
+    rgba(10, 39, 31, 0.78);
+}
+
+.portal-demo-tile.hard {
+  border-color: rgba(178, 205, 211, 0.32);
+  background:
+    linear-gradient(135deg, rgba(230, 245, 248, 0.26), transparent 42%),
+    #455965;
+  box-shadow: inset -4px -4px 0 rgba(0, 0, 0, 0.22);
+}
+
+.portal-demo-tile.soft {
+  border-color: rgba(255, 174, 84, 0.45);
+  background:
+    linear-gradient(135deg, rgba(255, 202, 116, 0.8) 0 46%, rgba(96, 44, 22, 0.92) 47% 100%),
+    #9a4d27;
+}
+
+.portal-demo-zone,
+.portal-demo-path,
+.portal-demo-bomb,
+.portal-demo-item {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.portal-demo-zone {
+  border: 2px solid rgba(91, 214, 160, 0.72);
+  border-radius: 999px;
+  box-shadow: 0 0 36px rgba(91, 214, 160, 0.12);
+  animation: portalZonePulse 4.8s var(--ease-out-quart) infinite;
+}
+
+.zone-outer {
+  inset: 8% 14% 13% 12%;
+}
+
+.zone-inner {
+  inset: 28% 34% 31% 36%;
+  border-style: dashed;
+  opacity: 0.7;
+  animation-delay: 0.6s;
+}
+
+.portal-demo-path {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 244, 207, 0.42), transparent);
+  transform-origin: left center;
+  opacity: 0.75;
+}
+
+.path-a {
+  left: 20%;
+  right: 16%;
+  top: 43%;
+  transform: rotate(-8deg);
+}
+
+.path-b {
+  left: 12%;
+  right: 24%;
+  bottom: 24%;
+  transform: rotate(7deg);
+}
+
+.portal-demo-bomb {
+  width: clamp(34px, 4.5vw, 54px);
+  aspect-ratio: 1;
+  border: 3px solid #f6c453;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 28%, #fff4cf 0 14%, transparent 15%),
+    radial-gradient(circle at 56% 58%, #11110d 0 43%, #050605 44% 62%, transparent 63%);
+  box-shadow:
+    0 0 0 4px rgba(5, 9, 8, 0.5),
+    0 0 26px rgba(246, 196, 83, 0.34);
+  animation: portalBombBlink 3.2s steps(2, end) infinite;
+}
+
+.bomb-a {
+  left: 62%;
+  top: 55%;
+}
+
+.bomb-b {
+  left: 34%;
+  top: 28%;
+  animation-delay: 1.2s;
+}
+
+.portal-demo-item {
+  width: clamp(22px, 3vw, 34px);
+  aspect-ratio: 1;
+  border: 2px solid rgba(255, 244, 207, 0.76);
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #f6c453, #5bd6a0);
+  box-shadow: 0 0 18px rgba(91, 214, 160, 0.3);
+}
+
+.item-a {
+  left: 19%;
+  top: 62%;
+}
+
+.item-b {
+  right: 22%;
+  top: 26%;
+  background: linear-gradient(135deg, #ff6f52, #f6c453);
+}
+
+.portal-demo-card {
+  position: absolute;
+  z-index: 6;
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(246, 196, 83, 0.36);
+  background: rgba(8, 12, 10, 0.88);
+  box-shadow: 0 26px 48px rgba(0, 0, 0, 0.36);
+}
+
+.hero-card {
+  top: 19%;
+  right: 4%;
+  width: clamp(170px, 19vw, 236px);
+  padding: 10px;
+  transform: rotate(3deg);
+  animation: portalHeroCardFloat 6.4s var(--ease-out-quart) infinite;
+}
+
+.hero-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 5px solid rgba(5, 9, 8, 0.94);
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.hero-card div {
+  display: grid;
+  gap: 2px;
+  padding: 0 4px 4px;
+}
+
+.hero-card span,
+.portal-demo-console span {
+  color: #f6c453;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.hero-card strong {
+  color: #fff4cf;
+  font-family: "Sora", sans-serif;
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+}
+
+.hero-card small {
+  color: rgba(213, 231, 221, 0.76);
+  font-weight: 800;
+}
+
+.portal-demo-squad {
+  position: absolute;
+  left: 9%;
+  right: 26%;
+  bottom: 5%;
+  z-index: 7;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.portal-demo-mini {
+  display: grid;
+  grid-template-columns: 42px auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 118px;
+  border: 1px solid rgba(96, 116, 106, 0.58);
+  background: rgba(8, 13, 11, 0.88);
+  padding: 7px 9px 7px 7px;
+  color: #fff4cf;
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  animation: portalMiniFloat 5.8s var(--ease-out-quart) infinite;
+  animation-delay: var(--delay);
+}
+
+.portal-demo-mini img {
+  width: 42px;
+  height: 42px;
+  border: 2px solid rgba(246, 196, 83, 0.42);
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.portal-demo-console {
+  position: absolute;
+  right: 5%;
+  bottom: 7%;
+  z-index: 8;
+  display: grid;
+  gap: 2px;
+  min-width: 210px;
+  border: 1px solid rgba(91, 214, 160, 0.38);
+  background: rgba(7, 12, 10, 0.86);
+  padding: 12px 14px;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.32);
+}
+
+.portal-demo-console strong {
+  color: #d9ffe9;
+  font-size: 0.95rem;
+}
+
 .portal-header {
   display: flex;
   align-items: flex-start;
@@ -4285,6 +4633,67 @@ small {
   }
 }
 
+@keyframes portalScannerSweep {
+  0%,
+  36% {
+    transform: translateX(-76%);
+    opacity: 0;
+  }
+  48% {
+    opacity: 0.5;
+  }
+  72%,
+  100% {
+    transform: translateX(78%);
+    opacity: 0;
+  }
+}
+
+@keyframes portalZonePulse {
+  0%,
+  100% {
+    opacity: 0.46;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.86;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes portalBombBlink {
+  0%,
+  62% {
+    filter: saturate(1);
+    transform: scale(1);
+  }
+  63%,
+  100% {
+    filter: saturate(1.2) brightness(1.12);
+    transform: scale(1.06);
+  }
+}
+
+@keyframes portalHeroCardFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(3deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+@keyframes portalMiniFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
 @media (max-width: 1120px) {
   .workbench-grid,
   .viewer-shell,
@@ -4504,7 +4913,12 @@ small {
   .portal-demo-blast,
   .portal-demo-safe-ring,
   .portal-demo-route,
-  .chameleon-leg {
+  .chameleon-leg,
+  .portal-demo-stage::before,
+  .portal-demo-zone,
+  .portal-demo-bomb,
+  .hero-card,
+  .portal-demo-mini {
     animation: none !important;
   }
 

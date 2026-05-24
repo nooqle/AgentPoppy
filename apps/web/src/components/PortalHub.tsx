@@ -456,54 +456,70 @@ export function PortalHub({
 }
 
 function PortalBattleDemo() {
+  const combatants = [
+    { name: "Ember", code: "#101", src: "/skins/social-chameleon/101.png", className: "ember" },
+    { name: "Mesa", code: "#4", src: "/skins/social-chameleon/4.png", className: "mesa" },
+    { name: "Volt", code: "#377", src: "/skins/social-chameleon/377.png", className: "volt" },
+    { name: "Jade", code: "#88", src: "/skins/social-chameleon/88.png", className: "jade" }
+  ];
+  const featuredCombatant = combatants[0]!;
+
   return (
-    <div className="portal-battle-demo" aria-hidden="true">
-      <div className="portal-demo-hud">
-        <span>4 人毒圈乱斗</span>
-        <strong>Agent 接入中</strong>
+    <div className="portal-battle-demo" aria-label="Agent Jola 4 人毒圈乱斗展示">
+      <div className="portal-demo-backdrop">
+        <span className="portal-demo-glow glow-a" />
+        <span className="portal-demo-glow glow-b" />
       </div>
-      <div className="portal-demo-floor">
-        <span className="portal-demo-lane lane-a" />
-        <span className="portal-demo-lane lane-b" />
-        <span className="portal-demo-lane lane-c" />
-        <span className="portal-demo-crate crate-a" />
-        <span className="portal-demo-crate crate-b" />
-        <span className="portal-demo-crate crate-c" />
-        <span className="portal-demo-crate crate-d" />
-      </div>
-      <span className="portal-demo-route route-a" />
-      <span className="portal-demo-route route-b" />
-      <span className="portal-demo-bubble bubble-a" />
-      <span className="portal-demo-bubble bubble-b" />
-      <span className="portal-demo-bubble bubble-c" />
-      <span className="portal-demo-blast blast-a" />
-      <span className="portal-demo-blast blast-b" />
-      <span className="portal-demo-safe-ring" />
-      <div className="portal-demo-runner runner-primary">
-        <span className="portal-demo-shadow" />
-        <PortalPixelChameleon variant="primary" />
-      </div>
-      <div className="portal-demo-runner runner-rival">
-        <span className="portal-demo-shadow" />
-        <PortalPixelChameleon variant="rival" />
+
+      <div className="portal-demo-stage">
+        <div className="portal-demo-hud">
+          <span>ROOM LOCAL</span>
+          <strong>4 Agent 毒圈乱斗</strong>
+        </div>
+
+        <div className="portal-demo-map" aria-hidden="true">
+          {Array.from({ length: 64 }).map((_, index) => (
+            <span
+              key={index}
+              className={`portal-demo-tile ${
+                index % 11 === 0 || index === 18 || index === 43 ? "hard" : index % 7 === 0 || index === 29 ? "soft" : ""
+              }`}
+            />
+          ))}
+          <span className="portal-demo-zone zone-outer" />
+          <span className="portal-demo-zone zone-inner" />
+          <span className="portal-demo-path path-a" />
+          <span className="portal-demo-path path-b" />
+          <span className="portal-demo-bomb bomb-a" />
+          <span className="portal-demo-bomb bomb-b" />
+          <span className="portal-demo-item item-a" />
+          <span className="portal-demo-item item-b" />
+        </div>
+
+        <div className="portal-demo-card hero-card">
+          <img src={featuredCombatant.src} alt="" />
+          <div>
+            <span>当前角色</span>
+            <strong>{featuredCombatant.name}</strong>
+            <small>Codex ready · {featuredCombatant.code}</small>
+          </div>
+        </div>
+
+        <div className="portal-demo-squad" aria-hidden="true">
+          {combatants.slice(1).map((agent, index) => (
+            <div key={agent.name} className={`portal-demo-mini ${agent.className}`} style={{ "--delay": `${index * 0.18}s` } as CSSProperties}>
+              <img src={agent.src} alt="" />
+              <span>{agent.name}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="portal-demo-console">
+          <span>API key synced</span>
+          <strong>Agent 正在进入房间</strong>
+        </div>
       </div>
     </div>
-  );
-}
-
-function PortalPixelChameleon({ variant }: { variant: "primary" | "rival" }) {
-  return (
-    <span className={`portal-demo-agent pixel-chameleon ${variant === "rival" ? "rival-agent" : ""}`}>
-      <span className="chameleon-tail" />
-      <span className="chameleon-body" />
-      <span className="chameleon-head" />
-      <span className="chameleon-crest" />
-      <span className="chameleon-eye" />
-      <span className="chameleon-mouth" />
-      <span className="chameleon-leg leg-front" />
-      <span className="chameleon-leg leg-back" />
-      <span className="chameleon-pack" />
-    </span>
   );
 }
 
