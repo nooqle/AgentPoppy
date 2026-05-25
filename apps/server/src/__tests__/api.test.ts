@@ -630,7 +630,7 @@ describe("server API", () => {
         cloudUrl: "https://api.agentjola.test",
         provider: "openai",
         commands: {
-          clone: "git clone https://github.com/agentjola/agent-jola.git",
+          clone: "git clone https://github.com/nooqle/agent-jola.git",
           configure: expect.stringContaining("--cloud-url https://api.agentjola.test"),
           syncProfile: "pnpm agent:setting sync",
           runAgent: "pnpm agent:openai"

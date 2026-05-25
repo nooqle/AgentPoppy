@@ -95,6 +95,7 @@ export function PortalHub({
   const setupSteps = [
     { label: "创建角色", done: hasCharacter, active: true },
     { label: "安装并绑定 key", done: hasRuntimeKey, active: hasCharacter },
+    { label: "交给 Agent", done: Boolean(install), active: hasRuntimeKey },
     { label: "复制 Prompt", done: hasCopiedPrompt, active: canCopyPrompt }
   ];
 
@@ -363,6 +364,15 @@ export function PortalHub({
                 </button>
               ) : null}
               {install ? <InstallCommandCard install={install} copied={copied} onCopy={copyText} compact /> : null}
+              {install ? (
+                <AgentPackCardGrid
+                  install={install}
+                  agentName={agentName}
+                  strategyText={strategyText}
+                  copied={copied}
+                  onCopy={copyText}
+                />
+              ) : null}
               <PortalQuotaSummary quotas={me.quotas ?? []} />
 
               <details className="portal-secondary-details">
@@ -681,6 +691,122 @@ function PortalRadar({ strategy }: { strategy: ReturnType<typeof parseNaturalLan
       </div>
     </div>
   );
+}
+
+function AgentPackCardGrid({
+  install,
+  agentName,
+  strategyText,
+  copied,
+  onCopy
+}: {
+  install: PortalInstallCommandResponse;
+  agentName: string;
+  strategyText: string;
+  copied: string;
+  onCopy: (id: string, text: string) => Promise<void>;
+}) {
+  const cards = [
+    {
+      id: "codex",
+      label: "Codex",
+      title: "用 Skill 接管安装",
+      description: "让 Codex 使用仓库内置 skill，完成安装、授权确认、Prompt 预览和自检。"
+    },
+    {
+      id: "claude",
+      label: "Claude Code",
+      title: "复制任务说明",
+      description: "给 Claude Code 一段安全边界明确的接入指令，关键写入动作会停下来确认。"
+    },
+    {
+      id: "openclaw",
+      label: "OpenClaw",
+      title: "本地 Agent 接入",
+      description: "让 OpenClaw 按同样流程接入角色、API key、Prompt 模板和房间验证。"
+    }
+  ] as const;
+
+  return (
+    <div className="agent-pack-grid" aria-label="复制给本地 Agent">
+      <div className="agent-pack-intro">
+        <span>给我的 Agent</span>
+        <strong>复制一段任务，它就知道怎么接入 Agent Jola。</strong>
+        <small>这段内容可能包含刚生成的 API key，只发给你信任的本地 Agent。</small>
+      </div>
+      {cards.map((card) => {
+        const copyId = `agent-pack-${card.id}`;
+        return (
+          <button
+            key={card.id}
+            type="button"
+            className="agent-pack-card"
+            onClick={() => void onCopy(copyId, buildAgentPackInstruction(card.id, install, agentName, strategyText))}
+          >
+            <span>{card.label}</span>
+            <strong>{card.title}</strong>
+            <small>{copied === copyId ? "已复制到剪贴板" : card.description}</small>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function buildAgentPackInstruction(
+  target: "codex" | "claude" | "openclaw",
+  install: PortalInstallCommandResponse,
+  agentName: string,
+  strategyText: string
+): string {
+  const platformIntro =
+    target === "codex"
+      ? "After cloning, read skills/agent-jola/SKILL.md and follow that Agent Jola skill."
+      : target === "claude"
+        ? "Use these Agent Jola instructions in Claude Code."
+        : "Use these Agent Jola instructions in OpenClaw.";
+  const installScript = install.scripts?.windowsPowerShell ?? Object.values(install.commands).join("\n");
+  return [
+    "Set up Agent Jola for my local Agent.",
+    "",
+    platformIntro,
+    "",
+    "Rules:",
+    "1. Do not print raw Product API keys or provider keys back to chat.",
+    "2. Before writing .env.local, show me the destination and a redacted command, then ask for confirmation.",
+    "3. Before applying any battle Prompt, preview the final strategy and ask for confirmation.",
+    "4. Provider keys stay local and must not be uploaded to agentjola.art.",
+    "5. Use mock mode first before OpenAI or Anthropic provider mode.",
+    "6. Ask before creating, joining, readying, starting, cancelling, or leaving a room.",
+    "",
+    `Agent name: ${agentName}`,
+    `Provider: ${install.provider}`,
+    `Cloud URL: ${install.cloudUrl}`,
+    `Local URL: ${install.baseUrl}`,
+    "",
+    "Install and sync commands to run after my confirmation:",
+    "```powershell",
+    installScript,
+    "```",
+    "",
+    "Battle strategy to preview before applying:",
+    "```text",
+    strategyText,
+    "```",
+    "",
+    "Validation gate:",
+    "```powershell",
+    "pnpm agent:setting sync",
+    "pnpm agent:setting check",
+    "pnpm agent:templates",
+    "pnpm agent:template prompt zoneHunter --agent " + shellWord(agentName),
+    "pnpm agent:mock",
+    "```"
+  ].join("\n");
+}
+
+function shellWord(value: string): string {
+  return /^[A-Za-z0-9_-]+$/.test(value) ? value : JSON.stringify(value);
 }
 
 function InstallCommandCard({

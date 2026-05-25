@@ -4070,7 +4070,8 @@ small {
 .portal-template-strip,
 .portal-key-list,
 .quota-grid,
-.portal-template-list {
+.portal-template-list,
+.agent-pack-grid {
   display: grid;
   gap: 8px;
 }
@@ -4088,6 +4089,7 @@ small {
 .portal-key-list > div,
 .portal-secret-box,
 .install-command-card,
+.agent-pack-card,
 .quota-grid span {
   border: 1px solid rgba(96, 116, 106, 0.54);
   border-radius: var(--radius);
@@ -4184,6 +4186,71 @@ small {
   display: grid;
   gap: 8px;
   padding: 10px;
+}
+
+.agent-pack-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 2px;
+}
+
+.agent-pack-intro {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 2px;
+  border: 1px solid rgba(246, 196, 83, 0.22);
+  background:
+    linear-gradient(90deg, rgba(246, 196, 83, 0.1), transparent 58%),
+    rgba(8, 13, 11, 0.82);
+  padding: 10px 12px;
+}
+
+.agent-pack-intro span,
+.agent-pack-card span {
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.agent-pack-intro strong {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.agent-pack-intro small {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.agent-pack-card {
+  display: grid;
+  gap: 6px;
+  min-height: 126px;
+  padding: 12px;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms var(--ease-out-quart),
+    transform 180ms var(--ease-out-quart),
+    background-color 180ms var(--ease-out-quart);
+}
+
+.agent-pack-card:hover {
+  border-color: rgba(246, 196, 83, 0.48);
+  background: #13211c;
+  transform: translateY(-2px);
+}
+
+.agent-pack-card strong {
+  font-family: "Sora", sans-serif;
+  font-size: 0.98rem;
+}
+
+.agent-pack-card small {
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .install-command-card pre {
@@ -5232,6 +5299,7 @@ small {
   .portal-player-card,
   .portal-match-row,
   .portal-rank-row,
+  .agent-pack-grid,
   .portal-login-steps,
   .portal-progress,
   .portal-quota-strip,

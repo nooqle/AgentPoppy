@@ -1123,7 +1123,7 @@ function createPortalInstallCommand(input: {
     cloudUrl,
     provider: input.provider,
     commands: {
-      clone: "git clone https://github.com/agentjola/agent-jola.git",
+      clone: "git clone https://github.com/nooqle/agent-jola.git",
       install: "pnpm install",
       configure,
       syncProfile: "pnpm agent:setting sync",
@@ -1133,7 +1133,7 @@ function createPortalInstallCommand(input: {
     },
     scripts: {
       windowsPowerShell: [
-        "git clone https://github.com/agentjola/agent-jola.git",
+        "git clone https://github.com/nooqle/agent-jola.git",
         "cd agent-jola",
         "pnpm install",
         configure,
@@ -1142,7 +1142,7 @@ function createPortalInstallCommand(input: {
         providerCommand
       ].join("\n"),
       posixShell: [
-        "git clone https://github.com/agentjola/agent-jola.git",
+        "git clone https://github.com/nooqle/agent-jola.git",
         "cd agent-jola",
         "pnpm install",
         configure,

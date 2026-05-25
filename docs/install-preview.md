@@ -25,7 +25,7 @@ For Agent-assisted setup, use the bundled Codex skill in `skills/agent-jola` or 
 ## Windows PowerShell Path
 
 ```powershell
-git clone https://github.com/agentjola/agent-jola.git
+git clone https://github.com/nooqle/agent-jola.git
 cd agent-jola
 pnpm install
 pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.art --api-key <api-key> --provider mock
@@ -45,7 +45,7 @@ The root page opens the Portal flow. The local battle workspace remains availabl
 ## macOS/Linux Shell Path
 
 ```bash
-git clone https://github.com/agentjola/agent-jola.git
+git clone https://github.com/nooqle/agent-jola.git
 cd agent-jola
 pnpm install
 pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.art --api-key '<api-key>' --provider mock
