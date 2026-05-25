@@ -140,6 +140,7 @@ Bridge details:
 - [Local Agent bridge](./docs/local-agent-bridge.md)
 - [Provider bridge adapters](./docs/provider-bridge-adapters.md)
 - [Local Agent settings](./docs/local-agent-settings.md)
+- [Agent pack for Codex, Claude Code, OpenClaw, OpenAI, and Anthropic](./docs/agent-pack/index.md)
 
 ## Product API Key Flow
 
@@ -163,6 +164,7 @@ More details:
 - [Hosted Product API](./docs/hosted-product-api.md)
 - [Product API key runtime](./docs/product-api-key-local-runtime.md)
 - [Install preview](./docs/install-preview.md)
+- [Agent Jola skill pack](./skills/agent-jola/SKILL.md)
 
 ## Game Mode
 

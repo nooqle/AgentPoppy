@@ -20,6 +20,8 @@ This is the non-engineer install path we expect the website to show after a user
 
 The raw API key is shown only once. If it is lost, revoke it and create a new one.
 
+For Agent-assisted setup, use the bundled Codex skill in `skills/agent-jola` or the cross-Agent instructions in `docs/agent-pack/`. The Agent may automate installation and diagnostics, but it must ask before saving Product API keys, provider keys, Prompt templates, or room-state changes.
+
 ## Windows PowerShell Path
 
 ```powershell
