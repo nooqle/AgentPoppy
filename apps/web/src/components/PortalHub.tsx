@@ -457,67 +457,70 @@ export function PortalHub({
 
 function PortalBattleDemo() {
   const combatants = [
-    { name: "Ember", code: "#101", src: "/skins/social-chameleon/101.png", className: "ember" },
-    { name: "Mesa", code: "#4", src: "/skins/social-chameleon/4.png", className: "mesa" },
-    { name: "Volt", code: "#377", src: "/skins/social-chameleon/377.png", className: "volt" },
-    { name: "Jade", code: "#88", src: "/skins/social-chameleon/88.png", className: "jade" }
+    { name: "Ember", code: "#101", src: "/skins/social-chameleon/101.png", className: "ember", status: "Ready" },
+    { name: "Mesa", code: "#4", src: "/skins/social-chameleon/4.png", className: "mesa", status: "Ready" },
+    { name: "Volt", code: "#377", src: "/skins/social-chameleon/377.png", className: "volt", status: "Ready" }
   ];
-  const featuredCombatant = combatants[0]!;
+  const hardTiles = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 15, 16, 23, 24, 32, 40, 48, 56, 64, 72, 73, 74, 75, 76, 77, 78, 79, 80]);
+  const softTiles = new Set([12, 13, 21, 29, 34, 35, 37, 43, 45, 51, 52, 60, 67, 69]);
 
   return (
-    <div className="portal-battle-demo" aria-label="Agent Jola 4 人毒圈乱斗展示">
-      <div className="portal-demo-backdrop">
-        <span className="portal-demo-glow glow-a" />
-        <span className="portal-demo-glow glow-b" />
-      </div>
-
-      <div className="portal-demo-stage">
-        <div className="portal-demo-hud">
-          <span>ROOM LOCAL</span>
-          <strong>4 Agent 毒圈乱斗</strong>
-        </div>
-
-        <div className="portal-demo-map" aria-hidden="true">
-          {Array.from({ length: 64 }).map((_, index) => (
-            <span
-              key={index}
-              className={`portal-demo-tile ${
-                index % 11 === 0 || index === 18 || index === 43 ? "hard" : index % 7 === 0 || index === 29 ? "soft" : ""
-              }`}
-            />
-          ))}
-          <span className="portal-demo-zone zone-outer" />
-          <span className="portal-demo-zone zone-inner" />
-          <span className="portal-demo-path path-a" />
-          <span className="portal-demo-path path-b" />
-          <span className="portal-demo-bomb bomb-a" />
-          <span className="portal-demo-bomb bomb-b" />
-          <span className="portal-demo-item item-a" />
-          <span className="portal-demo-item item-b" />
-        </div>
-
-        <div className="portal-demo-card hero-card">
-          <img src={featuredCombatant.src} alt="" />
+    <div className="portal-battle-demo portal-lobby-demo" aria-label="Agent Jola 等待开局展示">
+      <div className="portal-lobby-panel">
+        <header className="portal-lobby-header">
           <div>
-            <span>当前角色</span>
-            <strong>{featuredCombatant.name}</strong>
-            <small>Codex ready · {featuredCombatant.code}</small>
+            <span>ROOM LOCAL</span>
+            <strong>等待 Agent 加入</strong>
+          </div>
+          <small>3/4 Ready</small>
+        </header>
+
+        <div className="portal-lobby-map" aria-hidden="true">
+          {Array.from({ length: 81 }).map((_, index) => (
+            <span key={index} className={`portal-lobby-tile ${hardTiles.has(index) ? "hard" : softTiles.has(index) ? "soft" : ""}`} />
+          ))}
+          <span className="portal-lobby-safe-zone" />
+          <span className="portal-lobby-route route-one" />
+          <span className="portal-lobby-route route-two" />
+          <span className="portal-lobby-bomb bomb-one" />
+          <span className="portal-lobby-bomb bomb-two" />
+          {combatants.map((agent, index) => (
+            <span key={agent.name} className={`portal-lobby-blip ${agent.className}`} style={{ "--delay": `${index * 0.16}s` } as CSSProperties}>
+              <img src={agent.src} alt="" />
+            </span>
+          ))}
+        </div>
+
+        <div className="portal-lobby-roster">
+          {combatants.map((agent, index) => (
+            <div key={agent.name} className="portal-lobby-slot ready" style={{ "--delay": `${index * 0.1}s` } as CSSProperties}>
+              <img src={agent.src} alt="" />
+              <div>
+                <strong>{agent.name}</strong>
+                <small>
+                  {agent.status} · {agent.code}
+                </small>
+              </div>
+            </div>
+          ))}
+          <div className="portal-lobby-slot waiting">
+            <span className="portal-lobby-empty">
+              <span />
+            </span>
+            <div>
+              <strong>等待加入</strong>
+              <small>复制命令给本地 Agent</small>
+            </div>
           </div>
         </div>
 
-        <div className="portal-demo-squad" aria-hidden="true">
-          {combatants.slice(1).map((agent, index) => (
-            <div key={agent.name} className={`portal-demo-mini ${agent.className}`} style={{ "--delay": `${index * 0.18}s` } as CSSProperties}>
-              <img src={agent.src} alt="" />
-              <span>{agent.name}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="portal-demo-console">
-          <span>API key synced</span>
-          <strong>Agent 正在进入房间</strong>
-        </div>
+        <footer className="portal-lobby-footer">
+          <span>
+            <i />
+            本地 Agent 接入中
+          </span>
+          <strong>准备开局</strong>
+        </footer>
       </div>
     </div>
   );
