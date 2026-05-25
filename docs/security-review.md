@@ -6,7 +6,7 @@ This review records the security posture for the current Developer Preview imple
 
 - Hosted Portal auth: Google OAuth, dev-login guard, session cookie, logout.
 - Product API key issue/list/revoke and runtime profile sync.
-- Local install commands and local Agent provider keys.
+- Agent handoff tasks, local setup commands, and local Agent provider keys.
 - Prompt templates, replay/decision upload boundaries, quota placeholders.
 - Legacy Agent Poppy compatibility aliases.
 
@@ -26,7 +26,7 @@ This review records the security posture for the current Developer Preview imple
 - Server responses set baseline browser safety headers: `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, and `Permissions-Policy`.
 - OAuth start, Portal key issue, Product API room creation, and bridge prompt/action endpoints have lightweight in-memory rate limits for the Developer Preview.
 - Profile writes validate lengths, color format, and bounded appearance fields.
-- Legacy `AGENT_POPPY_*` and `X-Agent-Poppy-*` aliases are accepted only for compatibility and are not used in primary install commands.
+- Legacy `AGENT_POPPY_*` and `X-Agent-Poppy-*` aliases are accepted only for compatibility and are not used in primary Agent handoff copy.
 
 ## Threat Notes
 
@@ -34,7 +34,7 @@ This review records the security posture for the current Developer Preview imple
 - Session theft by frontend JS: mitigated by httpOnly cookie; Portal token header remains supported for local tooling but is not required by the hosted UI.
 - API key leakage through list endpoints: blocked; the raw key is not persisted as a retrievable plaintext field.
 - API key replay after revoke: covered by storage-backed status checks.
-- Provider secret leakage: install commands never include provider API keys; local setting sync writes only Agent Jola runtime config.
+- Provider secret leakage: Agent handoff tasks never include provider API keys; local setting sync writes only Agent Jola runtime config.
 - Prompt-template injection: templates are copied as user-facing text and are not executed as system instructions by the website.
 - Replay/decision upload: official upload is not enabled by default; future upload must scrub absolute paths, env vars, and secret-like tokens before sending.
 - Dev-login exposure: production disables it by default; release config must keep `AGENT_JOLA_ENABLE_DEV_PORTAL_LOGIN=false`.
@@ -63,7 +63,7 @@ Manual acceptance:
 - Raw key appears only once after creation.
 - Revoke blocks `/api/runtime/profile` immediately.
 - Production dev-login returns unavailable.
-- Install command does not print OpenAI or Anthropic keys.
+- Agent handoff/local setup copy does not print OpenAI or Anthropic keys.
 - `agent:setting sync` pulls only the key owner's profile.
 - Clean install smoke succeeds without copying local `.env`, `.env.local`, runtime data, logs, screenshots, or built artifacts.
 

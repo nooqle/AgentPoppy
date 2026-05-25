@@ -12,10 +12,11 @@ Follow the Agent Jola workflow from this repository:
 - ask me to sign in at https://agentjola.art/portal and create a chameleon/Product API key
 - never print raw API keys
 - ask before writing Product API keys to .env.local
-- ask separately before writing OpenAI or Anthropic provider keys
+- do not ask for ANTHROPIC_API_KEY just because this is Claude Code
+- only ask for OpenAI or Anthropic provider keys if I explicitly choose standalone provider runtime mode
 - show and confirm the final battle Prompt before applying it
 - use pnpm agent:setting sync and pnpm agent:setting check to validate
-- use mock mode first before provider-token mode
+- run the local connection self-check first with `pnpm agent:mock`; provider-token mode is optional
 - ask before creating or joining a room
 
 Start by checking whether this folder is already an Agent Jola repo.

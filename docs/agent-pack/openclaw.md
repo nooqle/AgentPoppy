@@ -16,8 +16,8 @@ Rules:
 6. Ask before applying a Prompt template or custom strategy.
 7. Ask before creating or joining a room.
 8. Validate with pnpm agent:setting check.
-9. Run mock mode first with pnpm agent:mock.
-10. Provider keys stay local.
+9. Run the local connection self-check first with pnpm agent:mock.
+10. Do not ask for provider keys unless I explicitly choose standalone OpenAI or Anthropic API runtime mode.
 ```
 
 ## First Template

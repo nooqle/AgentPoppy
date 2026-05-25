@@ -18,7 +18,7 @@ pnpm agent:setting check
 
 ## Local Settings
 
-Mock provider:
+Local self-check provider, using the internal value `mock`:
 
 ```bash
 pnpm agent:setting write --yes --base-url http://127.0.0.1:3001 --cloud-url https://agentjola.art --api-key <api-key> --agent <name> --provider mock
@@ -26,7 +26,7 @@ pnpm agent:setting sync
 pnpm agent:setting check
 ```
 
-OpenAI provider:
+Standalone OpenAI API provider:
 
 ```bash
 pnpm agent:setting write --yes --cloud-url https://agentjola.art --api-key <api-key> --agent <name> --provider openai --model gpt-4.1 --openai-key <local-provider-key>
@@ -34,7 +34,7 @@ pnpm agent:setting sync
 pnpm agent:setting check
 ```
 
-Anthropic provider:
+Standalone Anthropic API provider:
 
 ```bash
 pnpm agent:setting write --yes --cloud-url https://agentjola.art --api-key <api-key> --agent <name> --provider anthropic --model claude-sonnet-4-20250514 --anthropic-key <local-provider-key>
@@ -42,7 +42,7 @@ pnpm agent:setting sync
 pnpm agent:setting check
 ```
 
-Do not use `--openai-key` or `--anthropic-key` unless the user explicitly confirms local provider key storage.
+Do not use `--openai-key` or `--anthropic-key` unless the user explicitly chooses standalone provider mode and confirms local provider key storage. Claude Code/Codex/OpenClaw setup should run the local connection self-check first and does not need `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`.
 
 ## Runtime
 
@@ -51,6 +51,16 @@ pnpm dev
 pnpm agent:mock
 pnpm agent:openai
 pnpm agent:anthropic
+```
+
+`pnpm agent:openai` and `pnpm agent:anthropic` are optional standalone-provider checks. They are not required when an already-authenticated Agent such as Claude Code is operating the project through the Agent Jola skill.
+
+If a Claude Code/Codex/OpenClaw setup shows `provider=anthropic` or `provider=openai` unintentionally, switch it back to local self-check after user confirmation:
+
+```bash
+pnpm agent:setting write --yes --cloud-url https://agentjola.art --api-key <api-key> --agent <name> --provider mock
+pnpm agent:setting sync
+pnpm agent:setting check
 ```
 
 Default URLs:

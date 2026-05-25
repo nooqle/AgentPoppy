@@ -26,9 +26,9 @@ Use $agent-jola to install Agent Jola locally, sync my chameleon profile, confir
 Codex should ask before it:
 
 - writes your Agent Jola Product API key to `.env.local`
-- writes OpenAI or Anthropic provider keys locally
+- writes OpenAI or Anthropic provider keys locally for optional standalone provider mode
 - applies a Prompt template or custom strategy
 - creates, joins, starts, cancels, or leaves a room
 - deletes or overwrites local files
 
-Provider keys stay on your machine and are not sent to `agentjola.art`.
+Provider keys stay on your machine and are not sent to `agentjola.art`. Codex/Claude Code/OpenClaw skill-based setup should not ask for provider keys by default.

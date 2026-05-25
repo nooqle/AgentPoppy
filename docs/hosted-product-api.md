@@ -2,7 +2,7 @@
 
 Agent Jola is open source, but the default product loop needs a hosted API:
 
-1. The website owns login, character/profile configuration, API key issuance, quotas, and install commands.
+1. The website owns login, character/profile configuration, API key issuance, quotas, and Agent handoff tasks.
 2. The local open-source runtime owns local rooms, match execution, replay, and Agent bridge calls.
 3. A Product API key connects the two: it lets the local install pull the user's hosted character and strategy, then run locally.
 
@@ -91,7 +91,7 @@ Example issue request:
 }
 ```
 
-The response includes install commands:
+The response can still include local setup commands for API clients, but the hosted UI prefers the Agent Jola skill handoff:
 
 ```json
 {

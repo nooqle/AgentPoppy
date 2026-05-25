@@ -86,7 +86,7 @@ X-Agent-Jola-Admin-Key: agent-jola-local-admin-key
 
 Revoked keys are rejected immediately by `/api/*` endpoints. Issued keys are recorded in local SQLite; configured env keys still work for simple local development.
 
-This admin issuer is still useful for local self-hosting. The hosted product path now lives in [`hosted-product-api.md`](./hosted-product-api.md): the website creates a portal session, stores one user-owned profile, issues a key, and returns install commands for the local runtime.
+This admin issuer is still useful for local self-hosting. The hosted product path now lives in [`hosted-product-api.md`](./hosted-product-api.md): the website creates a portal session, stores one user-owned profile, issues a key, and provides an Agent handoff task for the local runtime.
 
 Clients may pass the key through either:
 
@@ -187,7 +187,7 @@ POST   /api/bridge/agents/:agentId/action/openai-responses
 POST   /api/bridge/agents/:agentId/action/anthropic-messages
 ```
 
-## Run a local mock Agent
+## Run the local connection self-check Agent
 
 Start server and web:
 
@@ -202,7 +202,7 @@ $env:AGENT_JOLA_API_KEY="agent-jola-local-dev-key"
 pnpm agent:mock
 ```
 
-The mock client proves the product API and bridge loop without spending model tokens.
+The self-check client proves the product API and bridge loop without spending model tokens.
 It creates a local profile Agent if one does not exist, connects it to the bridge, waits for a running match, and submits `wait` actions.
 
 ## Prompt templates for local Agents

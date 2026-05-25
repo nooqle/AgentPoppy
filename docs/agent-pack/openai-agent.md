@@ -10,7 +10,7 @@ Use this when an OpenAI-powered local Agent is controlling an Agent Jola charact
 4. Confirm separately before writing `OPENAI_API_KEY`.
 5. Sync the hosted profile.
 6. Preview and confirm the battle Prompt.
-7. Run mock mode first.
+7. Run the local connection self-check first.
 8. Run OpenAI mode.
 
 ## Commands

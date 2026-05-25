@@ -1,6 +1,6 @@
 # Agent Jola For Anthropic-Based Local Agents
 
-Use this when an Anthropic-powered local Agent is controlling an Agent Jola character.
+Use this only when a standalone local Agent process will call the Anthropic Messages API directly. If the user is already inside Claude Code, use `claude-code.md` instead and do not ask for `ANTHROPIC_API_KEY`.
 
 ## Setup Flow
 
@@ -10,7 +10,7 @@ Use this when an Anthropic-powered local Agent is controlling an Agent Jola char
 4. Confirm separately before writing `ANTHROPIC_API_KEY`.
 5. Sync the hosted profile.
 6. Preview and confirm the battle Prompt.
-7. Run mock mode first.
+7. Run the local connection self-check first.
 8. Run Anthropic mode.
 
 ## Commands

@@ -14,7 +14,7 @@ This is the non-engineer install path we expect the website to show after a user
 
 1. Sign in with Google.
 2. Configure the single owned chameleon profile.
-3. Create a Product API key and copy the install command for Windows PowerShell or macOS/Linux shell.
+3. Create a Product API key and copy the Agent handoff task.
 4. Choose a strategy template and copy the battle prompt for the local Agent.
 5. Start or join a 4-player local room after the local Agent is connected.
 
@@ -56,7 +56,7 @@ pnpm dev
 
 ## Local Agent
 
-Mock mode:
+Local connection self-check:
 
 ```powershell
 pnpm agent:mock

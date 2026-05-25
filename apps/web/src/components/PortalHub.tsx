@@ -15,7 +15,6 @@ import {
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { buildLocalAgentPrompt, parseNaturalLanguageStrategy } from "@agent-bomber/strategy";
 import type {
-  LocalAgentProvider,
   PortalInstallCommandResponse,
   PortalMeResponse,
   PortalProductApiKeyResponse,
@@ -27,7 +26,6 @@ import {
   portalCreateProductKey,
   portalDevLogin,
   portalGoogleStartUrl,
-  portalInstallCommand,
   portalLogout,
   portalMe,
   portalRevokeProductKey,
@@ -66,9 +64,7 @@ export function PortalHub({
   const [color, setColor] = useState(colors[0] ?? "#f97316");
   const [skinId, setSkinId] = useState(DEFAULT_AGENT_SKIN_ID);
   const [strategyText, setStrategyText] = useState(defaultStrategy);
-  const [provider, setProvider] = useState<LocalAgentProvider>("mock");
   const [createdKey, setCreatedKey] = useState<PortalProductApiKeyResponse | null>(null);
-  const [selectedInstall, setSelectedInstall] = useState<PortalInstallCommandResponse | null>(null);
   const [templates, setTemplates] = useState<Array<{ id: string; title: string; tag: string; prompt: string }>>([]);
   const [copied, setCopied] = useState("");
   const [characterModalOpen, setCharacterModalOpen] = useState(false);
@@ -90,12 +86,12 @@ export function PortalHub({
   const hasCopiedKey = copied === "raw-key";
   const hasRuntimeKey = Boolean(activeKey || createdKey);
   const canCopyPrompt = hasCharacter && hasRuntimeKey;
-  const install = createdKey?.install ?? selectedInstall;
+  const install = createdKey?.install ?? null;
   const recentMatches = matches.slice(0, 4);
   const setupSteps = [
     { label: "创建角色", done: hasCharacter, active: true },
-    { label: "安装并绑定 key", done: hasRuntimeKey, active: hasCharacter },
-    { label: "交给 Agent", done: Boolean(install), active: hasRuntimeKey },
+    { label: "生成 API key", done: hasRuntimeKey, active: hasCharacter },
+    { label: "交给 Agent", done: hasRuntimeKey, active: hasRuntimeKey },
     { label: "复制 Prompt", done: hasCopiedPrompt, active: canCopyPrompt }
   ];
 
@@ -148,7 +144,6 @@ export function PortalHub({
     await portalLogout();
     setMe(null);
     setCreatedKey(null);
-    setSelectedInstall(null);
   }
 
   async function saveProfile() {
@@ -185,10 +180,9 @@ export function PortalHub({
     try {
       const key = await portalCreateProductKey({
         handle: `${agentName || "Agent"} Runtime`,
-        provider
+        provider: "mock"
       });
       setCreatedKey(key);
-      setSelectedInstall(key.install);
       await refresh();
     } catch (keyError) {
       setError(errorMessage(keyError));
@@ -199,14 +193,8 @@ export function PortalHub({
     await portalRevokeProductKey(key.id);
     if (createdKey?.id === key.id) {
       setCreatedKey(null);
-      setSelectedInstall(null);
     }
     await refresh();
-  }
-
-  async function loadInstall(key: ProductApiKeyRecord) {
-    const install = await portalInstallCommand(key.id, provider);
-    setSelectedInstall(install);
   }
 
   async function copyText(id: string, text: string) {
@@ -222,7 +210,7 @@ export function PortalHub({
           <div className="portal-hero-copy">
             <p className="eyebrow">Agent Jola Developer Preview</p>
             <h1>让你的本地 Agent 进入房间</h1>
-            <p>在官网配置角色和战术，生成 API key，再把安装命令交给 Codex、Claude Code、OpenClaw 或自己的 Agent。</p>
+            <p>在官网配置角色和战术，生成 API key，再把 Agent Jola Skill 任务交给 Codex、Claude Code、OpenClaw 或自己的 Agent。</p>
             <div className="portal-login-steps" aria-label="接入流程">
               <span>
                 <strong>1</strong>
@@ -230,7 +218,7 @@ export function PortalHub({
               </span>
               <span>
                 <strong>2</strong>
-                复制安装命令和 API key
+                复制 API key
               </span>
               <span>
                 <strong>3</strong>
@@ -268,8 +256,8 @@ export function PortalHub({
           <h1>{hasCharacter ? "本地 Agent 接入向导" : "创建你的变色龙"}</h1>
           <p>
             {hasCharacter
-              ? "按顺序完成两次复制：先安装和绑定 API key，再复制作战 Prompt。"
-              : "先生成一个会进入战场的唯一角色。保存后会解锁安装命令和 Prompt。"}
+              ? "按顺序完成两次复制：先把 API key 和 Skill 任务交给 Agent，再复制作战 Prompt。"
+              : "先生成一个会进入战场的唯一角色。保存后会解锁 API key 和 Prompt。"}
           </p>
         </div>
         <div className="portal-user-pill">
@@ -321,20 +309,16 @@ export function PortalHub({
           <main className="portal-main-stack">
             <PortalSetupStep
               step="01"
-              title="安装本地项目并绑定 API key"
-              description="把这一步复制给本地 Agent。API key 只在创建时显示一次，之后只能重新生成。"
+              title="生成 API key 并交给 Agent"
+              description="API key 只在创建时显示一次。复制给你信任的本地 Agent，让它通过 Agent Jola Skill 完成安装和绑定。"
               status={createdKey ? "key 已生成" : activeKey ? "已有 key" : "待生成"}
               active
             >
               <div className="portal-key-console">
-                <label className="field-label portal-provider-field">
-                  <span>本地 Agent 类型</span>
-                  <select value={provider} onChange={(event) => setProvider(event.target.value as LocalAgentProvider)}>
-                    <option value="mock">Mock 测试</option>
-                    <option value="openai">OpenAI</option>
-                    <option value="anthropic">Anthropic / Claude</option>
-                  </select>
-                </label>
+                <div className="portal-runtime-note">
+                  <span>默认通过 Agent Jola Skill 接入</span>
+                  <small>Claude Code、Codex、OpenClaw 不需要额外模型 API key；只有独立直连 OpenAI/Anthropic runtime 才需要。</small>
+                </div>
                 <button type="button" className="portal-card-action primary-button" onClick={createKey}>
                   <KeyRound size={17} />
                   {activeKey && !createdKey ? "创建新的 API key" : "生成 API key"}
@@ -354,19 +338,13 @@ export function PortalHub({
                 <div className="portal-muted-box">
                   {activeKey
                     ? "你已经有 active key。旧 key 不会再次显示；如果没有保存，直接创建新的 key。"
-                    : "先生成 key，再复制安装命令给本地 Agent。"}
+                    : "先生成 key，再把 API key 和 Skill 任务复制给本地 Agent。"}
                 </div>
               )}
 
-              {activeKey && !install ? (
-                <button type="button" className="secondary-button compact" onClick={() => void loadInstall(activeKey)}>
-                  显示安装命令
-                </button>
-              ) : null}
-              {install ? <InstallCommandCard install={install} copied={copied} onCopy={copyText} compact /> : null}
-              {install ? (
+              {install || activeKey ? (
                 <AgentPackCardGrid
-                  install={install}
+                  install={install ?? null}
                   agentName={agentName}
                   strategyText={strategyText}
                   copied={copied}
@@ -387,9 +365,6 @@ export function PortalHub({
                           {key.lastUsedAt ? ` · 最近使用 ${formatDate(key.lastUsedAt)}` : " · 从未使用"}
                         </small>
                       </span>
-                      <button type="button" className="ghost-button compact" onClick={() => void loadInstall(key)}>
-                        命令模板
-                      </button>
                       {!key.revokedAt ? (
                         <button type="button" className="ghost-button compact" onClick={() => void revokeKey(key)}>
                           吊销
@@ -398,17 +373,14 @@ export function PortalHub({
                     </div>
                   ))}
                 </div>
-                {selectedInstall && !createdKey ? (
-                  <InstallCommandCard install={selectedInstall} copied={copied} onCopy={copyText} />
-                ) : null}
               </details>
             </PortalSetupStep>
 
             <PortalSetupStep
               step="02"
               title="复制作战策略"
-              description="本地项目安装好以后，再把这段 Prompt 复制给 Agent，让它知道怎么打。"
-              status={hasCopiedPrompt ? "Prompt 已复制" : canCopyPrompt ? "待复制" : "先完成安装"}
+              description="本地 Agent 接入后，再把这段 Prompt 复制给 Agent，让它知道怎么打。"
+              status={hasCopiedPrompt ? "Prompt 已复制" : canCopyPrompt ? "待复制" : "先完成接入"}
               active={canCopyPrompt}
             >
               {canCopyPrompt ? (
@@ -436,7 +408,7 @@ export function PortalHub({
                   </button>
                 </>
               ) : (
-                <div className="portal-muted-box">先完成上一步：创建 API key，并复制安装命令给本地 Agent。</div>
+                <div className="portal-muted-box">先完成上一步：创建 API key，并把 Skill 任务复制给本地 Agent。</div>
               )}
             </PortalSetupStep>
 
@@ -519,7 +491,7 @@ function PortalBattleDemo() {
             </span>
             <div>
               <strong>等待加入</strong>
-              <small>复制命令给本地 Agent</small>
+              <small>复制任务给本地 Agent</small>
             </div>
           </div>
         </div>
@@ -700,7 +672,7 @@ function AgentPackCardGrid({
   copied,
   onCopy
 }: {
-  install: PortalInstallCommandResponse;
+  install: PortalInstallCommandResponse | null;
   agentName: string;
   strategyText: string;
   copied: string;
@@ -710,8 +682,8 @@ function AgentPackCardGrid({
     {
       id: "codex",
       label: "Codex",
-      title: "用 Skill 接管安装",
-      description: "让 Codex 使用仓库内置 skill，完成安装、授权确认、Prompt 预览和自检。"
+      title: "用 Skill 接入项目",
+      description: "让 Codex 使用 Agent Jola skill，完成授权确认、配置写入、Prompt 预览和本地自检。"
     },
     {
       id: "claude",
@@ -755,17 +727,18 @@ function AgentPackCardGrid({
 
 function buildAgentPackInstruction(
   target: "codex" | "claude" | "openclaw",
-  install: PortalInstallCommandResponse,
+  install: PortalInstallCommandResponse | null,
   agentName: string,
   strategyText: string
 ): string {
   const platformIntro =
     target === "codex"
-      ? "After cloning, read skills/agent-jola/SKILL.md and follow that Agent Jola skill."
+      ? "Use the Agent Jola skill. If it is not installed yet, install it from the skill source below."
       : target === "claude"
         ? "Use these Agent Jola instructions in Claude Code."
         : "Use these Agent Jola instructions in OpenClaw.";
-  const installScript = install.scripts?.windowsPowerShell ?? Object.values(install.commands).join("\n");
+  const cloudUrl = install?.cloudUrl ?? window.location.origin;
+  const localUrl = install?.baseUrl ?? "http://127.0.0.1:3001";
   return [
     "Set up Agent Jola for my local Agent.",
     "",
@@ -773,28 +746,27 @@ function buildAgentPackInstruction(
     "",
     "Rules:",
     "1. Do not print raw Product API keys or provider keys back to chat.",
-    "2. Before writing .env.local, show me the destination and a redacted command, then ask for confirmation.",
+    "2. Ask me to paste the Product API key separately; do not infer it from browser content.",
     "3. Before applying any battle Prompt, preview the final strategy and ask for confirmation.",
-    "4. Provider keys stay local and must not be uploaded to agentjola.art.",
-    "5. Use mock mode first before OpenAI or Anthropic provider mode.",
+    "4. Do not ask for OPENAI_API_KEY or ANTHROPIC_API_KEY for Claude Code/Codex/OpenClaw setup.",
+    "5. Provider keys are only needed if I explicitly choose standalone OpenAI or Anthropic API runtime mode.",
     "6. Ask before creating, joining, readying, starting, cancelling, or leaving a room.",
     "",
     `Agent name: ${agentName}`,
-    `Provider: ${install.provider}`,
-    `Cloud URL: ${install.cloudUrl}`,
-    `Local URL: ${install.baseUrl}`,
+    "Runtime mode: Agent Skill + local connection check first",
+    `Cloud URL: ${cloudUrl}`,
+    `Local URL: ${localUrl}`,
     "",
-    "Install and sync commands to run after my confirmation:",
-    "```powershell",
-    installScript,
-    "```",
+    "Use the Agent Jola skill as the setup entry point.",
+    "Skill source: https://github.com/nooqle/agent-jola/tree/main/skills/agent-jola",
+    "After the skill is available, ask for confirmation before it writes local settings.",
     "",
     "Battle strategy to preview before applying:",
     "```text",
     strategyText,
     "```",
     "",
-    "Validation gate:",
+    "Run the local connection self-check first. It does not call OpenAI or Anthropic:",
     "```powershell",
     "pnpm agent:setting sync",
     "pnpm agent:setting check",
@@ -807,38 +779,6 @@ function buildAgentPackInstruction(
 
 function shellWord(value: string): string {
   return /^[A-Za-z0-9_-]+$/.test(value) ? value : JSON.stringify(value);
-}
-
-function InstallCommandCard({
-  install,
-  copied,
-  onCopy,
-  compact = false
-}: {
-  install: PortalInstallCommandResponse;
-  copied: string;
-  onCopy: (id: string, text: string) => Promise<void>;
-  compact?: boolean;
-}) {
-  const windows = install.scripts?.windowsPowerShell ?? Object.values(install.commands).join("\n");
-  const posix = install.scripts?.posixShell ?? windows;
-  return (
-    <div className={`install-command-card ${compact ? "compact-install-card" : ""}`}>
-      <div>
-        <span>安装命令</span>
-        <small>命令会写入 Agent Jola API key，并同步角色资料。</small>
-      </div>
-      {!compact ? <pre>{windows}</pre> : null}
-      <div className="install-copy-row">
-        <button type="button" className="secondary-button compact" onClick={() => void onCopy("install-win", windows)}>
-          {copied === "install-win" ? "Windows 已复制" : "复制 Windows 命令"}
-        </button>
-        <button type="button" className="secondary-button compact" onClick={() => void onCopy("install-posix", posix)}>
-          {copied === "install-posix" ? "Shell 已复制" : "复制 macOS / Linux 命令"}
-        </button>
-      </div>
-    </div>
-  );
 }
 
 function PortalMatchList({
@@ -856,7 +796,7 @@ function PortalMatchList({
         <h2>最近对局</h2>
         <small>时间、参赛者、赢家、我的名次</small>
       </div>
-      {matches.length === 0 ? <p className="portal-empty-note">还没有对局。安装本地项目后开一局，这里会出现战报。</p> : null}
+      {matches.length === 0 ? <p className="portal-empty-note">还没有对局。本地 Agent 接入后开一局，这里会出现战报。</p> : null}
       {matches.map((match) => (
         <button key={match.id} type="button" className="portal-match-row" onClick={() => onOpenReplay(match)}>
           <span>

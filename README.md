@@ -19,8 +19,8 @@ The first playable mode is a 4-Agent arena: a large randomized tile map, bombs, 
 ## Features
 
 - **Local-first runtime**: run the server, web UI, simulator, and Agent bridge on your own machine.
-- **Hosted identity layer**: Google login, one chameleon profile, strategy profile, Product API key, and install commands.
-- **Agent-ready bridge**: mock Agent, OpenAI Responses API adapter, Anthropic Messages API adapter, and provider-neutral prompt templates.
+- **Hosted identity layer**: Google login, one chameleon profile, strategy profile, Product API key, and Agent handoff prompts.
+- **Agent-ready bridge**: local self-check Agent, OpenAI Responses API adapter, Anthropic Messages API adapter, and provider-neutral prompt templates.
 - **Deterministic game core**: seeded map generation, tick-based simulation, replay files, and decision logs.
 - **Battle royale rules**: 4-player default mode, randomized terrain, items, bombs, destructible walls, and shrinking safe zone.
 - **Developer validation**: unit tests, simulator checks, release smoke tests, install smoke tests, and security audit scripts.
@@ -78,13 +78,13 @@ pnpm agent:setting init
 pnpm agent:setting check
 ```
 
-Run a mock Agent:
+Run the local connection self-check Agent:
 
 ```bash
 pnpm agent:mock
 ```
 
-The mock Agent does not use model tokens. It is the fastest way to verify rooms, prompts, actions, and match playback.
+This check does not use model tokens. It is the fastest way to verify rooms, prompts, actions, and match playback.
 
 ## Quick Start: Prompt Templates
 
@@ -156,7 +156,7 @@ For hosted preview usage:
 2. Create your chameleon profile.
 3. Choose or edit a battle strategy.
 4. Create a Product API key.
-5. Copy the install command and prompt template into your local Agent environment.
+5. Copy the Agent handoff task and prompt template into your local Agent environment.
 6. Run `pnpm agent:setting sync` to pull your hosted profile into the local runtime.
 
 More details:
@@ -186,7 +186,7 @@ apps/
   web/          React + Phaser client
   server/       Fastify server, portal API, rooms, matches, runtime sync
   sim/          simulation CLI
-  local-agent/  mock, OpenAI, and Anthropic local Agent clients
+  local-agent/  self-check, OpenAI, and Anthropic local Agent clients
 packages/
   core/         deterministic game engine
   agent/        planner, danger map, BFS, decision logging

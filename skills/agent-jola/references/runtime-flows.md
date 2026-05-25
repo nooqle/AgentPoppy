@@ -42,13 +42,13 @@ Confirm before these browser/API actions because they alter room state:
 
 Agent Jola supports:
 
-- mock Agent: no model tokens
+- local self-check Agent, command name `pnpm agent:mock`: no model tokens
 - OpenAI Responses API local adapter
 - Anthropic Messages API local adapter
 
 Provider keys stay local. The bridge fetches provider-shaped prompts from Agent Jola and submits only the selected game action back. Do not upload provider keys, environment dumps, local file paths, or full private logs to the hosted service.
 
-Use mock mode before spending provider tokens:
+Use the local connection self-check before spending provider tokens:
 
 ```bash
 pnpm agent:mock

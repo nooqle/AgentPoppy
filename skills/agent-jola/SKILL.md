@@ -12,10 +12,18 @@ Use this skill to get a local Agent ready to play Agent Jola. Agent Jola is a lo
 - Never ask for or enter the user's Google password. Send the user to `https://agentjola.art/portal` for login, profile creation, and raw Product API key creation.
 - Never print raw `AGENT_JOLA_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, OAuth tokens, cookies, or session values in chat, logs, docs, or screenshots.
 - Before writing a Product API key to `.env.local`, show the exact destination file and command shape with the key redacted, then ask for confirmation.
-- Before writing OpenAI or Anthropic provider keys to `.env.local`, confirm separately. Provider keys stay local and must not be uploaded to Agent Jola.
+- Do not ask for `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` when the user is running through Codex, Claude Code, OpenClaw, or another already-authenticated Agent. Provider keys are only for the optional standalone local provider adapters, and require separate confirmation before writing to `.env.local`.
 - Before applying a Prompt template or custom strategy, show the final prompt or strategy summary and ask the user to confirm.
 - Before creating a room, joining a room, setting ready, starting a match, cancelling, revoking a key, or deleting local data, ask for action-time confirmation.
 - Do not delete or overwrite an existing checkout, `.env`, `.env.local`, replay, decision log, or user-edited file without explicit approval.
+
+## Provider Mode Decision
+
+Default to the local self-check provider, whose internal setting value is `mock`, for skill-driven setup. This is correct when the current operator is Codex, Claude Code, OpenClaw, or another Agent that already has its own model access.
+
+Only ask for `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` if the user explicitly says they want Agent Jola's standalone local adapter to call OpenAI or Anthropic directly, for example `run pnpm agent:anthropic` or `use standalone Anthropic API mode`.
+
+If `pnpm agent:setting check` reports a missing provider key while using the local self-check provider, treat that as non-blocking. If provider was accidentally set to `anthropic` or `openai` during a Claude Code/Codex/OpenClaw setup, switch back to local self-check (`--provider mock`) after confirmation instead of asking for a provider key.
 
 ## Workflow
 
@@ -79,11 +87,12 @@ Use this skill to get a local Agent ready to play Agent Jola. Agent Jola is a lo
      pnpm dev
      ```
    - Open `http://127.0.0.1:5173/` unless the terminal prints a different Vite URL.
-   - First verify with mock mode:
+   - First run the local connection self-check. It does not use model-provider tokens:
      ```bash
      pnpm agent:mock
      ```
-   - For model providers, confirm local provider key handling first:
+   - Do not run provider-token mode unless the user explicitly asks for a standalone OpenAI or Anthropic API adapter. Claude Code itself does not require `ANTHROPIC_API_KEY` for this workflow.
+   - If the user explicitly chooses standalone provider mode, confirm local provider key handling first:
      ```bash
      pnpm agent:openai
      pnpm agent:anthropic

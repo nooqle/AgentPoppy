@@ -4088,7 +4088,6 @@ small {
 .portal-template-list article,
 .portal-key-list > div,
 .portal-secret-box,
-.install-command-card,
 .agent-pack-card,
 .quota-grid span {
   border: 1px solid rgba(96, 116, 106, 0.54);
@@ -4106,8 +4105,7 @@ small {
 
 .portal-template-strip span,
 .portal-template-list span,
-.portal-secret-box span,
-.install-command-card > span {
+.portal-secret-box span {
   color: var(--accent);
   font-size: 0.72rem;
   font-weight: 900;
@@ -4157,7 +4155,7 @@ small {
 
 .portal-key-list > div {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
   align-items: center;
   padding: 10px;
@@ -4173,18 +4171,11 @@ small {
   padding: 10px;
 }
 
-.portal-secret-box code,
-.install-command-card pre {
+.portal-secret-box code {
   overflow: auto;
   border: 1px solid rgba(96, 116, 106, 0.38);
   background: #080d0b;
   color: #d9ffe9;
-  padding: 10px;
-}
-
-.install-command-card {
-  display: grid;
-  gap: 8px;
   padding: 10px;
 }
 
@@ -4251,11 +4242,6 @@ small {
 .agent-pack-card small {
   color: var(--muted);
   line-height: 1.45;
-}
-
-.install-command-card pre {
-  margin: 0;
-  white-space: pre-wrap;
 }
 
 .quota-grid {
@@ -4745,30 +4731,23 @@ small {
   white-space: nowrap;
 }
 
-.portal-provider-field select {
-  width: 100%;
-}
-
-.compact-install-card {
-  gap: 10px;
-  border-color: rgba(91, 214, 160, 0.36);
-  background: rgba(91, 214, 160, 0.06);
-}
-
-.install-command-card > div:first-child {
+.portal-runtime-note {
   display: grid;
-  gap: 3px;
+  gap: 4px;
+  border: 1px solid rgba(91, 214, 160, 0.25);
+  border-radius: var(--radius);
+  background: rgba(91, 214, 160, 0.06);
+  padding: 10px 12px;
 }
 
-.install-command-card > div:first-child small {
+.portal-runtime-note span {
+  color: var(--text);
+  font-weight: 900;
+}
+
+.portal-runtime-note small {
   color: var(--muted);
-  font-weight: 800;
-}
-
-.install-copy-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  line-height: 1.4;
 }
 
 .portal-quota-strip {
@@ -5309,7 +5288,6 @@ small {
   .portal-radar-wrap > div,
   .portal-key-list > div,
   .portal-dev-login,
-  .install-copy-row,
   .quota-grid,
   .agent-prompt-template-grid,
   .strategy-action-row,

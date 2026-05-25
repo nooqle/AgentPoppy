@@ -16,4 +16,4 @@ Use the platform-specific instruction files when the Agent does not support Code
 - [OpenAI local Agent](./openai-agent.md)
 - [Anthropic local Agent](./anthropic-agent.md)
 
-The core rule is simple: installation and diagnostics may be automated, but authorization, Product API key storage, provider key storage, Prompt application, and room state changes require explicit user confirmation.
+The core rule is simple: installation and diagnostics may be automated, but authorization, Product API key storage, Prompt application, and room state changes require explicit user confirmation. Provider API keys are optional and only belong to standalone OpenAI/Anthropic local adapter flows, not ordinary Codex, Claude Code, or OpenClaw skill setup.
