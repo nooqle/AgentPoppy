@@ -522,7 +522,7 @@ function AgentIdentity({
 }
 
 async function resolveLocalRoom(apiKey: string): Promise<ResolvedLocalRoom> {
-  if (apiKey === DEFAULT_LOCAL_PRODUCT_API_KEY) {
+  if (apiKey === DEFAULT_LOCAL_PRODUCT_API_KEY && canUseLocalWebFallback()) {
     try {
       return await resolveLegacyLocalRoom();
     } catch {
@@ -596,6 +596,10 @@ function chooseCurrentRoom(rooms: RoomRecord[], agentId: string): RoomRecord | u
       (room) => room.status !== "running" && room.participants.length < room.maxParticipants
     )
   );
+}
+
+function canUseLocalWebFallback(): boolean {
+  return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
 }
 
 function roomCanBeEdited(room: RoomRecord): boolean {
