@@ -11,12 +11,19 @@ import {
 } from "./mockData";
 import { normalizeAgentSkinId } from "./skins";
 import type {
+  AgentDetail,
+  AgentProfile as ProductAgentProfile,
+  LocalAgentControllerStatus,
   LocalAgentProvider,
   PortalInstallCommandResponse,
   PortalMeResponse,
   PortalProductApiKeyResponse,
+  ProductApiAuthInfo,
+  ProductApiQuotaPolicy,
+  ProductApiUser,
   PortalSessionResponse,
-  PortalProfile
+  PortalProfile,
+  RoomRecord
 } from "@agent-bomber/protocol";
 import type { StrategyPromptTemplate } from "@agent-bomber/strategy";
 import type {
@@ -38,6 +45,8 @@ import type {
 } from "./types";
 
 const API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL);
+export const DEFAULT_LOCAL_PRODUCT_API_KEY = "agent-jola-local-dev-key";
+export const LOCAL_PRODUCT_API_KEY_STORAGE = "agent-jola-local-api-key";
 
 let fallbackAgents = [...mockAgents];
 let fallbackStrategies = [...mockStrategies];
@@ -59,6 +68,49 @@ export interface DashboardData {
   matches: MatchRecord[];
   leaderboard: LeaderboardRow[];
   mode: ServerMode;
+}
+
+export interface ProductMeData {
+  user: ProductApiUser;
+  auth: ProductApiAuthInfo;
+  capabilities: {
+    bridgeProviders: string[];
+    roomMode: "royale-4";
+    localRuntime: boolean;
+  };
+  quotas: ProductApiQuotaPolicy[];
+}
+
+export interface ProductProfileData {
+  user: ProductApiUser;
+  agent: AgentDetail | null;
+  agents: ProductAgentProfile[];
+}
+
+export interface ProductStartRoomData {
+  room: RoomRecord;
+  matchId: string;
+  record: MatchRecord;
+}
+
+export function loadLocalProductApiKey(): string {
+  const stored = window.localStorage.getItem(LOCAL_PRODUCT_API_KEY_STORAGE)?.trim();
+  if (stored) {
+    return stored;
+  }
+  const configured = import.meta.env.VITE_AGENT_JOLA_API_KEY?.trim();
+  return configured || DEFAULT_LOCAL_PRODUCT_API_KEY;
+}
+
+export function saveLocalProductApiKey(apiKey: string): void {
+  const trimmed = apiKey.trim();
+  if (trimmed) {
+    window.localStorage.setItem(LOCAL_PRODUCT_API_KEY_STORAGE, trimmed);
+  }
+}
+
+export function clearLocalProductApiKey(): void {
+  window.localStorage.removeItem(LOCAL_PRODUCT_API_KEY_STORAGE);
 }
 
 export async function loadDashboard(): Promise<DashboardData> {
@@ -178,6 +230,167 @@ export async function portalStrategyTemplates(): Promise<{ templates: StrategyPr
   return requestJson<{ templates: StrategyPromptTemplate[] }>("/api/portal/strategy-templates", {
     credentials: "include"
   });
+}
+
+export async function productMe(apiKey: string): Promise<ProductMeData> {
+  return requestProductJson<ProductMeData>(apiKey, "/api/me");
+}
+
+export async function productProfile(apiKey: string): Promise<ProductProfileData> {
+  return requestProductJson<ProductProfileData>(apiKey, "/api/profile");
+}
+
+export async function productUpsertProfileAgent(
+  apiKey: string,
+  input: {
+    name?: string;
+    appearance?: Partial<AgentAppearance>;
+    strategyText?: string;
+  }
+): Promise<AgentDetail> {
+  return requestProductJson<AgentDetail>(apiKey, "/api/profile/agent", {
+    method: "POST",
+    body: JSON.stringify(input)
+  });
+}
+
+export async function productRooms(apiKey: string): Promise<RoomRecord[]> {
+  return requestProductJson<RoomRecord[]>(apiKey, "/api/rooms");
+}
+
+export async function productCreateRoom(
+  apiKey: string,
+  input: { hostAgentId?: string; mapId?: MapPresetId } = {}
+): Promise<RoomRecord> {
+  return requestProductJson<RoomRecord>(apiKey, "/api/rooms", {
+    method: "POST",
+    body: JSON.stringify(input)
+  });
+}
+
+export async function productGetRoom(apiKey: string, roomId: string): Promise<RoomRecord> {
+  return requestProductJson<RoomRecord>(apiKey, `/api/rooms/${encodeURIComponent(roomId)}`);
+}
+
+export async function productJoinRoom(
+  apiKey: string,
+  roomId: string,
+  agentId?: string
+): Promise<RoomRecord> {
+  return requestProductJson<RoomRecord>(apiKey, `/api/rooms/${encodeURIComponent(roomId)}/join`, {
+    method: "POST",
+    body: JSON.stringify(agentId ? { agentId } : {})
+  });
+}
+
+export async function productSetRoomReady(
+  apiKey: string,
+  roomId: string,
+  ready = true,
+  agentId?: string
+): Promise<RoomRecord> {
+  return requestProductJson<RoomRecord>(apiKey, `/api/rooms/${encodeURIComponent(roomId)}/ready`, {
+    method: "POST",
+    body: JSON.stringify(agentId ? { agentId, ready } : { ready })
+  });
+}
+
+export async function productStartRoom(
+  apiKey: string,
+  roomId: string,
+  seed?: string
+): Promise<ProductStartRoomData> {
+  const raw = await requestProductJson<{
+    room: RoomRecord;
+    matchId: string;
+    record: RawMatchRecord;
+  }>(apiKey, `/api/rooms/${encodeURIComponent(roomId)}/start`, {
+    method: "POST",
+    body: JSON.stringify(seed ? { seed } : {})
+  });
+  return {
+    room: raw.room,
+    matchId: raw.matchId,
+    record: normalizeRecord(raw.record)
+  };
+}
+
+export async function productLocalAgentStatus(
+  apiKey: string,
+  agentId: string
+): Promise<LocalAgentControllerStatus> {
+  return requestProductJson<LocalAgentControllerStatus>(
+    apiKey,
+    `/api/bridge/agents/${encodeURIComponent(agentId)}/status`
+  );
+}
+
+export async function localAgents(): Promise<ProductAgentProfile[]> {
+  return requestJson<ProductAgentProfile[]>("/agents");
+}
+
+export async function localCreateAgent(input: {
+  name: string;
+  appearance?: Partial<AgentAppearance>;
+  strategyText?: string;
+}): Promise<ProductAgentProfile> {
+  return requestJson<ProductAgentProfile>("/agents", {
+    method: "POST",
+    body: JSON.stringify(input)
+  });
+}
+
+export async function localRooms(): Promise<RoomRecord[]> {
+  return requestJson<RoomRecord[]>("/rooms");
+}
+
+export async function localCreateRoom(input: { hostAgentId?: string; mapId?: MapPresetId }): Promise<RoomRecord> {
+  return requestJson<RoomRecord>("/rooms", {
+    method: "POST",
+    body: JSON.stringify(input)
+  });
+}
+
+export async function localGetRoom(roomId: string): Promise<RoomRecord> {
+  return requestJson<RoomRecord>(`/rooms/${encodeURIComponent(roomId)}`);
+}
+
+export async function localJoinRoom(roomId: string, agentId: string): Promise<RoomRecord> {
+  return requestJson<RoomRecord>(`/rooms/${encodeURIComponent(roomId)}/join`, {
+    method: "POST",
+    body: JSON.stringify({ agentId })
+  });
+}
+
+export async function localSetRoomReady(
+  roomId: string,
+  agentId: string,
+  ready = true
+): Promise<RoomRecord> {
+  return requestJson<RoomRecord>(`/rooms/${encodeURIComponent(roomId)}/ready`, {
+    method: "POST",
+    body: JSON.stringify({ agentId, ready })
+  });
+}
+
+export async function localStartRoom(roomId: string, seed?: string): Promise<ProductStartRoomData> {
+  const raw = await requestJson<{
+    room: RoomRecord;
+    matchId: string;
+    record: RawMatchRecord;
+  }>(`/rooms/${encodeURIComponent(roomId)}/start`, {
+    method: "POST",
+    body: JSON.stringify(seed ? { seed } : {})
+  });
+  return {
+    room: raw.room,
+    matchId: raw.matchId,
+    record: normalizeRecord(raw.record)
+  };
+}
+
+export async function localAgentStatus(agentId: string): Promise<LocalAgentControllerStatus> {
+  return requestJson<LocalAgentControllerStatus>(`/bridge/agents/${encodeURIComponent(agentId)}/status`);
 }
 
 export async function createAgent(
@@ -352,6 +565,20 @@ async function requestJson<T>(
   } finally {
     window.clearTimeout(timeout);
   }
+}
+
+async function requestProductJson<T>(
+  apiKey: string,
+  path: string,
+  options: RequestInit & { timeoutMs?: number } = {}
+): Promise<T> {
+  return requestJson<T>(path, {
+    ...options,
+    headers: {
+      "X-Agent-Jola-Key": apiKey,
+      ...options.headers
+    }
+  });
 }
 
 interface RawAgent {

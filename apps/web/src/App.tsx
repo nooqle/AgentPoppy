@@ -1,4 +1,4 @@
-import { ArrowLeft, RadioTower, UserRoundCog } from "lucide-react";
+import { ArrowLeft, DoorOpen, RadioTower, UserRoundCog } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import {
   createAgent,
@@ -10,6 +10,7 @@ import {
 } from "./api";
 import { Workbench } from "./components/Workbench";
 import { PortalHub } from "./components/PortalHub";
+import { LocalRoom } from "./components/LocalRoom";
 import { I18nProvider, useI18n, type Language } from "./i18n";
 import type {
   AgentAppearance,
@@ -29,6 +30,7 @@ const ReplayViewer = lazy(() =>
 );
 
 type ViewState =
+  | { name: "local-room" }
   | { name: "workbench" }
   | { name: "portal" }
   | { name: "match"; match: MatchRecord }
@@ -132,6 +134,11 @@ function AppContent({
     setView({ name: "match", match });
   };
 
+  const handleOpenLocalMatch = (match: MatchRecord) => {
+    setMatches((current) => [match, ...current.filter((candidate) => candidate.id !== match.id)]);
+    setView({ name: "match", match });
+  };
+
   const handleOpenReplay = (match: MatchRecord) => {
     setView({ name: "replay", match });
   };
@@ -152,18 +159,37 @@ function AppContent({
               <option value="en">{t("language.en")}</option>
             </select>
           </label>
-          {view.name === "workbench" ? (
-            <button type="button" className="ghost-button" onClick={() => navigate({ name: "portal" }, "/portal")}>
-              <UserRoundCog size={17} />
-              回到 Portal
-            </button>
-          ) : null}
-          {view.name !== "workbench" && view.name !== "portal" ? (
+          {view.name === "local-room" ? (
             <button
               type="button"
               className="ghost-button"
               onClick={() => {
-                navigate({ name: "workbench" }, "/local");
+                navigate({ name: "workbench" }, "/workbench");
+                void refreshDashboard();
+              }}
+            >
+              <UserRoundCog size={17} />
+              作战大厅
+            </button>
+          ) : null}
+          {view.name === "workbench" ? (
+            <>
+              <button type="button" className="ghost-button" onClick={() => navigate({ name: "local-room" }, "/local")}>
+                <DoorOpen size={17} />
+                当前房间
+              </button>
+              <button type="button" className="ghost-button" onClick={() => navigate({ name: "portal" }, "/portal")}>
+                <UserRoundCog size={17} />
+                回到 Portal
+              </button>
+            </>
+          ) : null}
+          {view.name !== "workbench" && view.name !== "portal" && view.name !== "local-room" ? (
+            <button
+              type="button"
+              className="ghost-button"
+              onClick={() => {
+                navigate({ name: "local-room" }, "/local");
                 void refreshDashboard();
               }}
             >
@@ -173,6 +199,8 @@ function AppContent({
           ) : null}
         </div>
       </div>
+
+      {view.name === "local-room" ? <LocalRoom onOpenMatch={handleOpenLocalMatch} /> : null}
 
       {view.name === "workbench" ? (
         <Workbench
@@ -209,7 +237,10 @@ function AppContent({
 }
 
 function viewFromPath(pathname: string): ViewState {
-  if (pathname === "/local" || pathname === "/workbench") {
+  if (pathname === "/local") {
+    return { name: "local-room" };
+  }
+  if (pathname === "/workbench") {
     return { name: "workbench" };
   }
   return { name: "portal" };
